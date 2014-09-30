@@ -9,10 +9,9 @@ package com.infinity.GamosapienDesktopServer;
  * NIVEDITHA
  * 
  * DEVICE DATA 
- * Data Format: D,Roll,Pitch,Yaw,Key(VolUp,VolDn,9GridValues)
+ * 
  * 
  */
-import java.awt.AWTException;
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
@@ -21,35 +20,42 @@ public class DeviceData {
 	private int Roll;
 	private int Pitch;
 	private int Yaw;
-	private int hwKey;
+	private char hwKey[];
 	private MouseClass mouse;
-	private CheckClass check;
-
+	//private KeyPressCheckClass keyPress;
+	KeyStroke keyStrokeengine;
 	private DatagramSocket serverSocket;
 	private Timer headDataTimer; // Timer to call receive data at regular
 									// intervals
 	private InetAddress sendersIPAddress; // Device Data Address
 	private int sendersPort; // Device Data Ephemeral Port
 	private int dataPort = 9001; // This is the port to which data is received
-									// in this PC
+	private char[] hwKeyState;
 
-	public DeviceData(int dataPortValue) throws SocketException,
-			UnknownHostException, AWTException {
+	// in this PC
+
+	public DeviceData(int dataPortValue) throws Exception {
+		keyStrokeengine=new KeyStroke();
 		dataPort = dataPortValue;
 		serverSocket = new DatagramSocket(dataPort);
 		headDataTimer = new Timer();
 		sendersIPAddress = InetAddress.getLocalHost();
 		sendersPort = dataPort;// Just initialize it with any Port
 		mouse = new MouseClass();
-		check = new CheckClass();
-		hwKey = 0;
+		//keyPress = new KeyPressCheckClass();
+		hwKey = new char[11];
+		hwKeyState=new char[11];
+		for(int i=0;i<11;++i)
+		{
+			hwKey[i]='0';
+			hwKeyState[i]='0';
+		}
 	}
 
 	public void startReceivingData() {
 		headDataTimer.scheduleAtFixedRate(new TimerTask() {
 
 			private int lastYAW = 0;
-			@SuppressWarnings("unused")
 			private float lastPitch = 0;
 
 			public void run() {
@@ -59,12 +65,11 @@ public class DeviceData {
 						receiveData.length);
 				try {
 					serverSocket.receive(receivePacket);
-					setHwKey(0);
 					String sentence = new String(receivePacket.getData());
 					sentence = sentence.trim();
 					try {
-						decodeAndSetHeadData(sentence);
-						// System.out.println("\n" + sentence);
+						decodeAndSetData(sentence);
+
 					} catch (Exception e) {
 
 						System.out.println("Error in Data Format ! Data: "
@@ -73,9 +78,6 @@ public class DeviceData {
 					sendersIPAddress = receivePacket.getAddress();
 					sendersPort = receivePacket.getPort();
 
-					System.out.println("\n MAPPED "
-							+ Utility.mappedValue((float) Yaw - lastYAW, -20f,
-									20f, 0f, 1000f));
 					int roundedYaw = (int) Utility.mappedValue((float) Yaw
 							- lastYAW, -50f, 50f, 0f, 1000f);
 					if (roundedYaw <= 3 && roundedYaw >= -3) {
@@ -86,14 +88,19 @@ public class DeviceData {
 					if (roundedPitch <= 3 && roundedPitch >= -3) {
 						roundedPitch = 0;
 					}
-					System.out.print("*****" + hwKey);
+
 					printAllData();
+
+					// Now Move the mouse and Keyboard presses
 					mouse.MM(0, roundedYaw, roundedPitch);
 					try {
-						check.check(hwKey);
+						for (int i = 0; i < 11; ++i) {
+							//keyPress.check(i,hwKey[i]);
+							keyStrokeengine.keys(hwKey[i],hwKeyState[i]-'0');
+						}
 
 					} catch (Exception e) {
-						System.out.print("NULL COMING");
+						System.out.print("NULL DETECTED");
 					}
 					lastPitch = Pitch;
 
@@ -101,7 +108,6 @@ public class DeviceData {
 					System.out.println("Error receiving data from Device ");
 					e.printStackTrace();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -111,25 +117,31 @@ public class DeviceData {
 	}
 
 	public void printAllData() {
-		System.out.println("Roll " + this.Roll + " Pitch " + this.Pitch
-				+ " Yaw " + this.Yaw + " hwKey " + this.getHwKey());
+		StringBuilder sb = new StringBuilder("Roll " + this.Roll + " Pitch "
+				+ this.Pitch + " Yaw " + this.Yaw + " hwKey ");
+		for (int i = 0; i < 11; ++i) {
+			sb.append("("+hwKey[i]+"-"+hwKeyState[i]+")");
+		}
+		System.out.println(sb.toString());
 		System.out.println(getHeadDeviceData());
 	}
 
-	private void decodeAndSetHeadData(String headData)
+	private void decodeAndSetData(String headData)
 			throws NumberFormatException, ArrayIndexOutOfBoundsException {
 		String[] DeviceSensorData = headData.trim().split(",");
 		this.setRoll(Integer.parseInt(DeviceSensorData[1]));
 		this.setPitch(Integer.parseInt(DeviceSensorData[2]));
 		this.setYaw(Integer.parseInt(DeviceSensorData[3]));
-		this.setHwKey(Integer.parseInt(DeviceSensorData[4]));
-
+		for (int i = 0; i < 11; ++i) {
+			this.hwKey[i]=(DeviceSensorData[4 + i].charAt(0));
+			this.hwKeyState[i]=(DeviceSensorData[4 + i].charAt(1));
+		}
 	}
 
 	public void stopReceivingData() throws IOException {
 
 		headDataTimer.cancel();
-		// To stop the Head data receiver if its waiting for the data from Head
+		// To stop the Head data receiver if its waiting for the data from
 		// Device
 		DatagramSocket clientSocket = new DatagramSocket();
 		InetAddress IPAddress = InetAddress.getLocalHost();
@@ -174,13 +186,5 @@ public class DeviceData {
 
 	public void setYaw(int yaw) {
 		Yaw = yaw;
-	}
-
-	public int getHwKey() {
-		return hwKey;
-	}
-
-	public void setHwKey(int hwKey) {
-		this.hwKey = hwKey;
 	}
 }
