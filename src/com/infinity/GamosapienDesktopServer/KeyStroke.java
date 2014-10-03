@@ -15,17 +15,14 @@ public class KeyStroke {
 
 	public void keys(char character, int keystate) throws Exception {
 
-		character=Character.toLowerCase(character);
-		System.out.println(character);
-		
-		if(character=='0')
-		{
+		character = Character.toLowerCase(character);
+
+		if (character == '0') {
 			return;
 		}
 		// r.delay(2000);
 		if (keystate == 1) {
-			switch (character)
-			{
+			switch (character) {
 			case '0':
 				break;
 			case 'a':
@@ -135,7 +132,7 @@ public class KeyStroke {
 				// throw new IllegalArgumentException("Cannot type character " +
 				// character);
 			}
-		} else if(keystate==2){
+		} else if (keystate == 2) {
 			switch (character) {
 			case '0':
 				break;
@@ -227,20 +224,19 @@ public class KeyStroke {
 				r.keyRelease(KeyEvent.VK_RIGHT);
 				break;
 			case '$':
-				if(mousekeyleftstate!=2){
-				r.mouseRelease(InputEvent.BUTTON1_MASK);
-				mousekeyleftstate = 2;
+				if (mousekeyleftstate != 2) {
+					r.mouseRelease(InputEvent.BUTTON1_MASK);
+					mousekeyleftstate = 2;
 				}
 				break;
 			case '*':
-				if(mousekeyrightstate!=2){
-				r.mouseRelease(InputEvent.BUTTON3_MASK);
-				mousekeyrightstate = 2;
+				if (mousekeyrightstate != 2) {
+					r.mouseRelease(InputEvent.BUTTON3_MASK);
+					mousekeyrightstate = 2;
 				}
 				break;
 			default:
-				// throw new IllegalArgumentException("Cannot type character " +
-				// character);
+				break;
 			}
 
 		}

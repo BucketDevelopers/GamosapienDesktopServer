@@ -22,7 +22,6 @@ public class DeviceData {
 	private int Yaw;
 	private char hwKey[];
 	private MouseClass mouse;
-	//private KeyPressCheckClass keyPress;
 	KeyStroke keyStrokeengine;
 	private DatagramSocket serverSocket;
 	private Timer headDataTimer; // Timer to call receive data at regular
@@ -35,20 +34,19 @@ public class DeviceData {
 	// in this PC
 
 	public DeviceData(int dataPortValue) throws Exception {
-		keyStrokeengine=new KeyStroke();
+		keyStrokeengine = new KeyStroke();
 		dataPort = dataPortValue;
 		serverSocket = new DatagramSocket(dataPort);
 		headDataTimer = new Timer();
 		sendersIPAddress = InetAddress.getLocalHost();
 		sendersPort = dataPort;// Just initialize it with any Port
 		mouse = new MouseClass();
-		//keyPress = new KeyPressCheckClass();
+		// keyPress = new KeyPressCheckClass();
 		hwKey = new char[11];
-		hwKeyState=new char[11];
-		for(int i=0;i<11;++i)
-		{
-			hwKey[i]='0';
-			hwKeyState[i]='0';
+		hwKeyState = new char[11];
+		for (int i = 0; i < 11; ++i) {
+			hwKey[i] = '0';
+			hwKeyState[i] = '0';
 		}
 	}
 
@@ -56,7 +54,8 @@ public class DeviceData {
 		headDataTimer.scheduleAtFixedRate(new TimerTask() {
 
 			private int lastYAW = 0;
-			private float lastPitch = 0;
+
+			// private float lastPitch = 0;
 
 			public void run() {
 
@@ -92,17 +91,16 @@ public class DeviceData {
 					printAllData();
 
 					// Now Move the mouse and Keyboard presses
-					mouse.MM(0, roundedYaw, roundedPitch);
+					mouse.MMove(0, roundedYaw, roundedPitch);
 					try {
 						for (int i = 0; i < 11; ++i) {
-							//keyPress.check(i,hwKey[i]);
-							keyStrokeengine.keys(hwKey[i],hwKeyState[i]-'0');
+							keyStrokeengine.keys(hwKey[i], hwKeyState[i] - '0');
 						}
 
 					} catch (Exception e) {
 						System.out.print("NULL DETECTED");
 					}
-					lastPitch = Pitch;
+					// lastPitch = Pitch;
 
 				} catch (IOException e) {
 					System.out.println("Error receiving data from Device ");
@@ -120,7 +118,7 @@ public class DeviceData {
 		StringBuilder sb = new StringBuilder("Roll " + this.Roll + " Pitch "
 				+ this.Pitch + " Yaw " + this.Yaw + " hwKey ");
 		for (int i = 0; i < 11; ++i) {
-			sb.append("("+hwKey[i]+"-"+hwKeyState[i]+")");
+			sb.append("(" + hwKey[i] + "-" + hwKeyState[i] + ")");
 		}
 		System.out.println(sb.toString());
 		System.out.println(getHeadDeviceData());
@@ -133,8 +131,8 @@ public class DeviceData {
 		this.setPitch(Integer.parseInt(DeviceSensorData[2]));
 		this.setYaw(Integer.parseInt(DeviceSensorData[3]));
 		for (int i = 0; i < 11; ++i) {
-			this.hwKey[i]=(DeviceSensorData[4 + i].charAt(0));
-			this.hwKeyState[i]=(DeviceSensorData[4 + i].charAt(1));
+			this.hwKey[i] = (DeviceSensorData[4 + i].charAt(0));
+			this.hwKeyState[i] = (DeviceSensorData[4 + i].charAt(1));
 		}
 	}
 

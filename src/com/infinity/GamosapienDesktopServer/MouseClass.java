@@ -25,11 +25,11 @@ public class MouseClass {
 
 	}
 
-	public void MM(int del, int x1, int y1) throws Exception {
+	public void MMove(int del, int x1, int y1) throws Exception {
 
 		x1 = (int) ((x1 * 1.0 * scrnsize.width) / 1000.0);
 		y1 = (int) ((y1 * 1.0 * scrnsize.height) / 1000.0);
-		
+
 		mouse.mouseMove(x1, y1);
 
 	}
