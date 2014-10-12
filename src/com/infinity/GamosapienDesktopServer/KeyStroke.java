@@ -1,4 +1,14 @@
 package com.infinity.GamosapienDesktopServer;
+/*
+ * 
+ * KEY MAP
+	!->LEFT,@->RIGHT, ->SPACE,*->MOUSERIGHT,$->MOUSELEFT,
+	%->UP,^->DOWN,&->CTRL,(->SHIFT,)->ALT,
+
+ * 
+ * 
+ */
+
 
 import java.awt.Robot;
 import java.awt.event.InputEvent;
@@ -103,7 +113,34 @@ public class KeyStroke {
 			case 'z':
 				r.keyPress(KeyEvent.VK_Z);
 				break;
-			case ' ':
+			case '1':
+				r.keyPress(KeyEvent.VK_1);
+				break;
+			case '2':
+				r.keyPress(KeyEvent.VK_2);
+				break;
+			case '3':
+				r.keyPress(KeyEvent.VK_3);
+				break;
+			case '4':
+				r.keyPress(KeyEvent.VK_4);
+				break;
+			case '5':
+				r.keyPress(KeyEvent.VK_5);
+				break;
+			case '6':
+				r.keyPress(KeyEvent.VK_6);
+				break;
+			case '7':
+				r.keyPress(KeyEvent.VK_7);
+				break;
+			case '8':
+				r.keyPress(KeyEvent.VK_8);
+				break;
+			case '9':
+				r.keyPress(KeyEvent.VK_9);
+				break;
+			case '_':
 				r.keyPress(KeyEvent.VK_SPACE);
 				break;
 			case '!':
@@ -112,6 +149,23 @@ public class KeyStroke {
 			case '@':
 				r.keyPress(KeyEvent.VK_RIGHT);
 				break;
+		//		%->UP,^->DOWN,&->CTRL,(->SHIFT,)->ALT,
+			case '%':
+				r.keyPress(KeyEvent.VK_UP);
+				break;
+			case '^':
+				r.keyPress(KeyEvent.VK_DOWN);
+				break;
+			case '&':
+				r.keyPress(KeyEvent.VK_CONTROL);
+				break;
+			case '(':
+				r.keyPress(KeyEvent.VK_SHIFT);
+				break;
+			case ')':
+				r.keyPress(KeyEvent.VK_ALT);
+				break;
+	
 			case '*':
 				if (mousekeyrightstate == 0 || mousekeyrightstate == 2) {
 					r.mousePress(InputEvent.BUTTON3_MASK);
@@ -214,7 +268,34 @@ public class KeyStroke {
 			case 'z':
 				r.keyRelease(KeyEvent.VK_Z);
 				break;
-			case ' ':
+			case '1':
+				r.keyRelease(KeyEvent.VK_1);
+				break;
+			case '2':
+				r.keyRelease(KeyEvent.VK_2);
+				break;
+			case '3':
+				r.keyRelease(KeyEvent.VK_3);
+				break;
+			case '4':
+				r.keyRelease(KeyEvent.VK_4);
+				break;
+			case '5':
+				r.keyRelease(KeyEvent.VK_5);
+				break;
+			case '6':
+				r.keyRelease(KeyEvent.VK_6);
+				break;
+			case '7':
+				r.keyRelease(KeyEvent.VK_7);
+				break;
+			case '8':
+				r.keyRelease(KeyEvent.VK_8);
+				break;
+			case '9':
+				r.keyRelease(KeyEvent.VK_9);
+				break;
+			case '_':
 				r.keyRelease(KeyEvent.VK_SPACE);
 				break;
 			case '!':
@@ -222,6 +303,22 @@ public class KeyStroke {
 				break;
 			case '@':
 				r.keyRelease(KeyEvent.VK_RIGHT);
+				break;
+		//		%->UP,^->DOWN,&->CTRL,(->SHIFT,)->ALT,
+			case '%':
+				r.keyRelease(KeyEvent.VK_UP);
+				break;
+			case '^':
+				r.keyRelease(KeyEvent.VK_DOWN);
+				break;
+			case '&':
+				r.keyRelease(KeyEvent.VK_CONTROL);
+				break;
+			case '(':
+				r.keyRelease(KeyEvent.VK_SHIFT);
+				break;
+			case ')':
+				r.keyRelease(KeyEvent.VK_ALT);
 				break;
 			case '$':
 				if (mousekeyleftstate != 2) {
